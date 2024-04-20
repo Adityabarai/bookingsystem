@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clickable Calendar</title>
+
+<style>
+  .calendar {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    border-collapse: collapse;
+    width: 75%;
+    border-radius: 10px;
+    margin: 0 auto ;
+
+   align-self: center;
+  }
+    .calendar th, .calendar td {
+      padding: 60px;
+      text-align: center;
+      border: 1px solid #f1eaea;
+      border-radius: 20px;
+      align-items: center;
+    }
+    .calendar th {
+      /*background-color: #465de0;*/
+      background-image: repeating-linear-gradient(rgb(77, 77, 253),rgb(129, 162, 253));
+      font-size: 23px;
+    }
+    .calender td{
+      font-size: 30px;
+    }
+    .calendar td:hover {
+background-image: url(yellow.png);
+      cursor: pointer;
+    }
+
+
+    .month-bar {
+      text-align:center; /* Updated */
+      margin-bottom: 10px;
+      align-items: center;
+    }
+    .month-bar select {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #4a74fd;
+      border-radius: 4px;
+      margin: 0 10px;
+    }
+    /* Style for Sunday (holiday) */
+    .calendar th:nth-child(2) {
+      /*background-color: rgba(255, 45, 45, 0.877); /* Red tint */
+      background-image:repeating-linear-gradient(red , rgba(255, 69, 36, 0.808));
+    }
+    .calendar td:nth-child(2) {
+      background-color: rgba(255, 45, 45, 0.2); /* Red tint */
+    }
+
+
+    /* Media query for responsive design */
+    @media screen and (max-width: 768px) {
+      .calendar {
+        width: 100%;
+        margin: 0 auto;
+      }
+    }
+  </style>
+  
+</head>
+
+<body>
+
+
+<div class="month-bar">
+  <label for="month">Choose a month:</label>
+  <select id="month" onchange="changeMonth()">
+    <option value="0">January</option>
+    <option value="1">February</option>
+    <option value="2">March</option>
+    <option value="3">April</option>
+    <option value="4">May</option>
+    <option value="5">June</option>
+    <option value="6">July</option>
+    <option value="7">August</option>
+    <option value="8">September</option>
+    <option value="9">October</option>
+    <option value="10">November</option>
+    <option value="11">December</option>
+  </select>
+  <label for="year">Choose a year:</label>
+  <select id="year" onchange="changeMonth()">
+    <!-- JavaScript will populate options here -->
+  </select>
+</div>
+
+<table class="calendar">
+  <thead>
+    <tr>
+      <th>Saturday</th>
+      <th>Sunday</th>
+      <th>Monday</th>
+      <th>Tuesday</th>
+      <th>Wednesday</th>
+      <th>Thursday</th>
+      <th>Friday</th>
+    </tr>
+  </thead>
+  <tbody id="calendar-body">
+    <!-- Calendar days will be added dynamically here -->
+  </tbody>
+</table>
+
+<script>
+// Populating the year dropdown with options from 2000 to 2100
+(function populateYears() {
+  const yearSelect = document.getElementById("year");
+  const currentYear = new Date().getFullYear();
+  for (let year = 2000; year <= 2100; year++) {
+    const option = document.createElement("option");
+    option.value = year;
+    option.textContent = year;
+    yearSelect.appendChild(option);
+  }
+})();
+
+function changeMonth() {
+  const monthSelect = document.getElementById("month");
+  const yearSelect = document.getElementById("year");
+  const selectedMonthIndex = monthSelect.value;
+  const selectedYear = yearSelect.value;
+  const selectedMonth = parseInt(selectedMonthIndex); // Months are 0-indexed in JavaScript Date object
+  
+  const calendarBody = document.getElementById("calendar-body");
+  calendarBody.innerHTML = ""; // Clear previous month's days
+  
+  // Calculate the offset for the first day of the month
+  const firstDay = new Date(selectedYear, selectedMonth, 1).getDay(); 
+  // Adjust the offset based on the starting day of January 2000 (Saturday)
+  let offset = (firstDay + 1) % 7; // Adding 1 to match the offset for Saturday
+  
+  const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate(); // Get number of days in selected month
+  
+  let dayCounter = 1;
+  let html = "";
+  html += "<tr>";
+  // Add empty cells for the offset
+  for (let i = 0; i < offset; i++) {
+    html += "<td></td>";
+  }
+  // Add days of the month
+  for (let i = offset; i < 7; i++) {
+    html += "<td onclick=\"alert('Clicked on " + (selectedMonth + 1) + "/" + dayCounter + "/" + selectedYear + "')\">" + dayCounter + "</td>";
+    dayCounter++;
+  }
+  html += "</tr>";
+  while (dayCounter <= daysInMonth) {
+    html += "<tr>";
+    for (let i = 0; i < 7 && dayCounter <= daysInMonth; i++) {
+      if (i === 1) { // Sunday column
+        html += "<td style='background-color: rgba(255, 45, 45, 0.2); cursor: pointer;' onclick=\"alert('Clicked on " + (selectedMonth + 1) + "/" + dayCounter + "/" + selectedYear + "')\">" + dayCounter + "</td>";
+      } else {
+        html += "<td onclick=\"alert('Clicked on " + (selectedMonth + 1) + "/" + dayCounter + "/" + selectedYear + "')\">" + dayCounter + "</td>";
+      }
+      dayCounter++;
+    }
+    html += "</tr>";
+  }
+  
+  calendarBody.innerHTML = html;
+}
+
+// Initialize calendar with current month
+window.onload = function() {
+  changeMonth();
+};
+
+</script>
+
+</body>
+</html>
