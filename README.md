@@ -1,5 +1,5 @@
 # Auditorium Booking System
-<h1>Auditorium Booking System</h1>
+
 Welcome to the Auditorium Booking System! This project provides an efficient and user-friendly solution for managing bookings for an auditorium. Users can reserve time slots for events and activities, while administrators can oversee bookings and manage schedules.<br>
 
 <h3>Features</h3>
